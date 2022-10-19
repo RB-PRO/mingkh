@@ -14,10 +14,10 @@ go build
 
 ### Run for Linux
 ```golang
-./mingkh
+./minzhhk
 ```
 
 ### Run for Windows
 ```golang
-mingkh.exe
+minzhhk.exe
 ```
