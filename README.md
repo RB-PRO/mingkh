@@ -9,17 +9,16 @@ git clone https://github.com/RB-PRO/mingkh.git
 
 ## Build
 ```golang
+go mod tidy
 go build
 ```
 
 ### Run for Linux
 ```golang
-go mod tidy
 ./minzhhk
 ```
 
 ### Run for Windows
 ```golang
-go mod tidy
 minzhhk.exe
 ```
