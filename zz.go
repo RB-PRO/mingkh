@@ -1,0 +1,62 @@
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+	"strings"
+)
+
+func get(url string) []byte {
+
+	method := "POST"
+
+	payload := strings.NewReader("fbda6ea0e20d09d7113fb116fda49f96385c2ca61c17c3bc7719f0e857142443=RFvAnlhmeDBkZVe6E5a4dLGdq8b.WqpVK0Xnd8RAHS4-1732914447-1.2.1.1-dfGG1ZOA.Z23jUtfBzUSNP4CL8vrfoypXnB4T_DwjoWSMr1xHYQIzZklFTX9tewEmHUuLKMPpkVSbC0vwWS3PxA5F60dQvSIb7rtTQyAsSQbM4z3UeUJBsUf6jmbVM_icWfcWNzedlmVUc7hDLfy5pk599q71Qt3mzHXdRzQqN1Y4vPkk7oNa8k3DPPUKQiFuB.MKQceQ6pSUytrLcDjxG0_xgx3rj7lxXeTuZ6lcwr0_QXtV__vsEJKLf.yfvhEUgY.rIUUZa1c.cd_U0z7gDHAm3jQ2eTxGEgcslHs023Dqr2KVQRjMPksnmGsxPHQNEmBOTGjnFkdIhmHG7tVr7NIwvWtp2cfKYcoKcz4eXvWqDVLDVbXs3ao2M3vqCq13DPUfQMF8KS5.u5eeFSngVMZ_CM6bdwRFVjmXMMHKRie4NPfk9xNIq4KDuLeyVRMLLoTaUyMH8O9tNXGRxdMZRZZDE22yVj2Vg26fUDXvCSu5XnJtC7SYS0PXufEvkIR1yEVAvSRzZbRwpU_iPtnOVB9mU4guu1xcLRKYKKw1gzx_ok97Rs_ILjbVQC.rr6MULIVWgI48ktjqFx3CWf7cwVOMVPOrudqwUV3YcgKfG94cBzzn0jDoM_B3A3TPOy5_uZ6dFmY4cclhF1pdrHU8p6nJFX6QA530Hge7BalYsGoVXYQzjdZBMZWWF4p9RuV4NJzLRaaarCl3nwP64jHyGVS.PPR9OuNsDdXxoy5l3pikilu3YGUS776zlFKJAD5eXlwFkwUPK8k3jw6YYM4t__LtWuEVqlG.E2mo3piOCbRvlTR4rJRT6lq9pC19RfWZJbxWTO6sISNRtSFjjZOtKg9VZwqPp20g.Gjqto6SBfkRhG1oN6Rf4Ivbw5XtVkcKGk_gJ.SaBwBoMQu0W6weeC9qISI5jmitzSZV_PG2hBqijb.iZh_tWdlcvds6UvE4txdiiL.I1KnAQMkkpoxvEALpK7qlzQY8JxEINZOl5jragUWRnknz_gKRD.KxwFGhsCurnDdNuuMsUGdIbkXcMQroRJWqPZv97u83w58uI6ed2nkA7ek85HZBvp4DKxNanb1yabTCnrYtWV2FbGtHP_HUkQXzjGMlB3gVpcuy9LDy8VK1T8.z.nzDngE8CZlJFRHibwPhm.2iwbKEIfhdu9Cz.kho4vMLjST47KaSMk5fI1tfOgtjjkF_7FdXjAQxcT.iXflKztyRVuYK0tP3cJk0wnBGXC1cp6Ntz4hZijuk1c29wtxtdnqtjjR89Xd7N2hzjfC8zLFy8SGaGxTd3PvPUKudZ28DM5IuIC6uTjxKDLPKcyTRBIgoORxpGlqYTgv0nrqPbeY4I5ygKK9lTwUSJMJ5bEa9NvaJO795gbNk_AjHAcOG_2mxiu_UGGn1QLpB5q4LsKJ2gixDzH00QYiCTuHVefcTZYAZjNmVLo5tJwarCUSf_3HdskPkNIw7Pe_YCAwv1cj9XHTVy_Y1Rnzy1xuTUgmkgy21878ntQNWjMyvIm5yNwe3fpalmIcSWVLv270vS0I8ocTZM1nB0QVRgR_vqk5AH78Q_R067hhIDLIYE1uP_TEMK12THV3xrzzPtwYP0aZtq906V.6511._15xz2ckPPaswbZ3EY7aRBHLsUb7.RLbksWcXN_tb4GKbCO9JMjYU11a22eSo2dXizSRK5pFp_BR50omQZbwA.Gyzzrr7FTTBhrrMa4laKlP8iDBr4wXuMVpwGRK70ZNQP82A4ThPaRCUW9H4My7h_V2tTQKmu_XLaqXPOcEtGdiwpK7wWuOlna_9CfJRT2wTVsT27f0FVmVy3U3IAY8Ea8J0NeXQSqxkSxWX94Hj5gE9d08lyU_WXWyrxfPp1aXSYvgbtWjuHV.ExDgeg66IN0wQm4i6hQZTr6_GFQP6aLf8iJbkznZ8zOUMEsiVtnlsqm4mGjPuMC5G5wbug6nbKt0sW0WqqoluASrscBk71dIuDmIe0nIM8wFli3BWQZ4poW8bvRSJ4tSZ2fIiLCImI1hFI4CNqM.FYAq7joZoJdqB6JnJn5l8NUP28CLqgfvvIXmppk2E6cWNhRqfeACMR_N5ywhJRZoYUb3yf3caONG6is6RVQno9_0CchSjxG_oNZqwZhVSpv48qkAQu820dkcfArP8N0.DmtYPa99NlpCHTi5RVNSF9.95XsM1JFHvD8j_GipQxXNuQ659bgLSF09De5Ij_gnS_IVKZ043D8TmcchXZrOEsVk1RyHFpSVepJCq2aLORLb8DMwQALUf_420qgLiTvns2ODToOXyDzG.UZA8uvwz0TAxvYO89EsZeRn2soh4xi17NXCfs8r8VQCgi167MC4Obz2v4_iAwHLLrxYwDA3RfBpg.YJ923_y4Iwkg0ahKV7KxDohQ3xqTDVDoslhH3MLoxvRxUY3LKuujv.x2AOuE9rslkhV8EzuPDJ8HckYKBoTA9KAcdE3kE7YCcvbCCA6DIOnolBWIEcCJwas9Li17BYDqk6kp.Xirq0cjREJ_1kfFz0hg0.OrN7u_Fnouozr2nxT5lEf6ZydTbTyjg1pfcQ4xr7ATPyVXO6Yp7nEMA3fJpn7CVOghVpRB_E_2H36R5JiKI_srPXPHw5F_U3rXr5YxhGX7S5goSrTnX8qRTf22IL5yoY1OCQQVUleNI_ghCNq026&7c7087f42fe36de46723230996400f5ba9af4ea770003702ea616660de7d1851=lvhCRghlkECFaK3Psq_NDQhKa3rmA3DnaNP_dxW4zG4-1732914447-1.2.1.1-b5Ju2r.jCi99xy992mm_sJizYbQcHbzLlmvr_WD_Ggqpg0sKTsUQSeKv3f2FW6k3ArRhWcsaloJUdUdXHVf4HEae7Wq6gfh6aVGYfvZomwAqbOkc4v6ETh.jd_8BXvswEFuWldpuGr8ajqLoBFAgxC1DIuPWnKOgHB2N_YkwmC89B7eoK5UFJQByWm1QXxaddGwQLfyIgMdmcOhBgBQT9.nDCpdEetG728iDe8HV36Ui54BV6sMUXBuGYdCl4vFPpEGjimLhc22ASpShf_YnPiEeGkM21ATQU5BZt7Z2Zs_i8Ltv2PoKhYoM9jPitw0.v7tweaY6nd7eF5dp2YORapDe7xxrRQ.9OSrQ6xbm4GJyn23gqQq6.EAURWpArVsqlEpu9YNVUwfbsJ9Q_qmx0f6y5J9WzhVtGm_IVlw.AXo8SpH0JrOeE.WYanRWy5Rt1JkOPTGrY9ThvrT5D1krbZ995p1WQQBcbyok_EXCQ_0lO17J..cneLp2qVAJM3fQIjuuOj2E63EM3F.2gR9ZooqmJsEOehjXvGDO9SOEQGSjaLVyJZvFW2_qKfXPJ.uMqqCKLQkGXbenZa0.Lbdm0bPkw8TuxODlElhOgENWMy5wyOYfgK9przapuJhmKR2yVbxTK8mMNKcJWaDtGnoQBLOFMsO_hN_25b6AS_JQRsjtFWTJtXYVSrV5meQsKucQtcQCN9VemDxYzE8f_e9gPwYSD3NgNIP1AiFSl5JZldoorEqzxNfb2KFogZ.Ys0a4hlD8NcY086_Xzwc_dVHEyzLX0hpDvgqUsnuOJchnaSnqBQ11AevhNKuAwsjoMCBndv7oukNWriUFIvrbPrNBYn9GJB02AiZALkStuMvSxhDvdb.2rZ0iOWrRNXFyVI0ee86RQcnZ1mzevLVeKGMDsV4lb7FNor2tH_WbPJc.BG5nI1Vs8GGXg8KSvi7ePCP9a1mAettzjtWOiqJ8sdM5oKll5oYOxvJeJsdJPOsFrv3MnAXEvAucFbubp4vRD4KvLpNzTgtbmcZshOE8hawrSw6xTjN6FR0En74X2etZiAMZXScs36vNdUD5xEvL4zcL5SCe_QK0T6SftiRAOJdEX6cHVMh7nRlTEriIfjWdHrP8zeVpyJdfI0A5puQGPvJN2WJZYT0veuu3MCnE5mJKtPtLBfRJeGZieixA2elYXzEwpLj7VXeGuR0NJjKOR.s5GNvR2F3ARYnr269VThpK.zrrgsXesr5JGZQjpqlI.tvOY.CXmxLRDWutCi9j47hjE7x0TDnKaF_dA0eWcPPvyelzVd.dj39w02MxcUF3khDRVau.CWgm6gLwX.F0UWPzCz8.UOX0mJjQ9gRM0H3L7PAMuk8eUevu26iDWnnVJVRD0PtgwhIJgDnC_j91GP6tcSWSTrddi1ju4n.Ln4pGru4dsPNXT3uLkmsenMjJXnqWwJSJUqBJnmGcM1PDaAdASnSnihWC7b_qzQCAmfyG9CFFMRsduTOqG2JzNzTJu.urcWqW2p2uxEMQqAFZiiU4rtpZF1Sicu0bRywv5ORFZg3hqzKEc5YqRTzAWxeBsqXczPZZErt7hfAiTbyFUkfUUfD7DdF37SARAbBu211sW566yvBhd9BAie7_h9SDTPkbmOnUUkZHhB1Rjm8GMRSpCaREx1i1FHIeISWzeezickRuTnxCltVvzizX18_5x3yjjYqB9TDFMt7J8Btt_SBV2LnEXNDKjgWr3IJhiv0CDSXk2ZKIV4oj1w3NEfd1BldDFzU5tAOh5bny_kvBHtPw_725YMivJcAdNQ6wj48nJ8bq.z0NCMu0tcNHLDnajckS1GBR9INW5Ws6.6PVoV1Zz_drinG_ZyHRc6kVf98_Yezqm_2jbPwbXj7uhOA.bzXBSscyOBDCAVAFguOtmShFSvRnpvqDyubTDAmLK.btvxOJ8pTS1iozW1FTq63SxzE.GSz6tyaDRM74cCwTaq9gQrT8MPRClVKwzGKDKHDyV66O7jvZM3ch_LvbmYy_I6BBuKL9Aotq4DHfTnLYkNDp7tfMIvwFkv6IfUc1HYz33SdKJkuvhie9fRPn7xlC3rq2tzM07HtBq9rf9oL_1SrHNvpXpeYnqy89FqDZQOCsDWTBHTSH1HPV5rAt9sbbwL4tl1UE3uwxEK1KMAWSmWc0CTaHnoxHxc2AI_yJGfVshDSUh8w23tWE5st7qeAzyd7Y3KkbCoXa831afdrMPzYKZ1bzImgttSiWRDnSM6xeQQyOj4F8bTdaT7YYI9Ni0yNiyuSw.o8lYIEzYq2dMsSczUszAntB82p6wcwmromrYPcEAlWq_Lwho4Ppj88Th43Fh0o.qPID8i3zLdVhBdZNOR8uWKSPyuc5.hk5UFDsEv_.dhH7Cqtnz.43kXDj3zhXoL0rZ3CFFwoOi_VTxuUSG3oygY.bqE9rmJ2A6bY.j1EAYlxBIlHCSMB5I5BUxND4kCgXsNw50lNrnRHQmPGjD7ufT32KHFYX3E9qAqtSKIl3GFKs9orSLPbDysAcMYkihQ3BAfrxDGkjQofVjr9ykZpoqFsueycKuRzOZgtUFWtsmXY6gKrl4tb8LYYJy7c3n8.uaISFEjv0UP7qpVA1msgHvDwtGdk6gS3t2dT2kU4FZHBU.FjtiVHz69OE_hYHiDBYSprgKoy9hprjZPqM2tyUG14GCGigIJKjN8IPXwSpfqTK4ot29ntb47Ep.nke1.rJagQ79TrCS4X_apfqI3biJoY50aJr3M7AMXtE1N5quiyf.m4kf5oIpAH5mfYvbYB51XuwANMjhDxjd0p7a1VRVypK_p0TM7sEZmJoh0k7aSQYBQCZdp5UyrGjaXf1SnG2ktqiniOYOWiYg_rUSQ7Kkxzv5zaSkINqmQZ.qSyHa6x07XbjRT8g5X_5aJpFmTm1zFyGx4zBABA8MKdl4YE8VRxAT5BeODXiB.TJScXDPUz0el8kzmq.6JmVp._8NUhe03DX75cjZuAtCeigOG9DL4VpYSo_43Dy.IO6mRgAPK2JgSV_q_LZdxKUtg0R2jqqGLZXR_0xhhYSpW78l0_8hq.KLCVyZ0i_Bxx3MXPAtIqyBxGyoyCu9TyprF1GsP4reQfaJlulGgHTk_mwyc3iTIfLrQmkpS7Rsm83Q0_WMMCvOJ_k3nvKxmsoRA33ktu_9yoL7cCMpeukxXURN7MA5TGibnNHqd.VO5AnRQ30y.qeK__Cy0hJXND9EFE4VJhC49YX5fAsh8ECDlKqFFh8wxWKEDyTUzEPHaSNRfaOP7SLmbs075KnnughmumlWgBYo5wTUenPNazMAzzFgOYO3jz5Gi2P8Mlk0_YzkefNDtbiScU4cGRmrPN0RM6c1sVyUXjkHMR8ONuYtymwXTgRfX.4poLB9cGQ8XDeZ6PCdBosPhyFpPASbht5fCCt5c9Ftfz7P7kZoAPcZTFNvkNDIZtrEyx9MsFgJ1WABBMKIxg_fWS5AjPj5Ybma2xMVKBHfEu_GJgQcX3p.xzdf8fkYLt0uLhXBsZsqW7SdX.XfO_qMtVgbNi5blRYdZdHGL7KCMLH8qNbOnunuli6xb8XgKUMwoKPF0oEZ4Gdb_T1Fobfm677T9LPf_nDgHakmoa3eqmmLxMi0Lcx5ei0Zotyi7yFLshmCgX82YcWQWLV2W85_SjGws8RKLSreaYg6.AHi7KCLxwpxyqXFHzCpRjJL2r6F0sAJ9hRkGKNBHqlYoSoOAoYA6pjiEudtcg&2cc8737c6c7859e0a61def520e93a4058c971c48440872b93d2d692347d624a4=oMwW23WeYIEQLFtRHJiNWglWtFRiVkWsPZIFmNONeMA-1732914458-1.1.1.1-5OPm2zyJq5NDzRESDigdMQhD7G35LgkT8FIDGcU23_oW3ehOaJ7wSoqhNvxZOMPS3SzyhIJsRrN21UE3VD70tfcqJJZ3ykb_2Se3OK7r_wudgtgkXHYTyAhamroaaKfBZO8HB79KVlc4SNzSZVfM_AvNbGvqpjR95ki1Po7mrxNnVyHcH.mVWWv_EcxrvTK1")
+
+	client := &http.Client{}
+	req, err := http.NewRequest(method, url, payload)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+	req.Header.Add("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7")
+	req.Header.Add("accept-language", "ru,en;q=0.9,lt;q=0.8,it;q=0.7")
+	req.Header.Add("cache-control", "max-age=0")
+	req.Header.Add("content-type", "application/x-www-form-urlencoded")
+	req.Header.Add("cookie", "_ym_uid=1732803774152010664; _ym_d=1732803774; cf_clearance=_uKdig3zXlAJdf0MlmZVf9a8pTbtP8jXWA5SAQcIqSI-1732914447-1.2.1.1-d0kPA0ber42F30k8GmaFM2RYcCWuw5a9lktfTySdYEGw.TOve.uKrW0tmk96sGM_ycxj6UM9ln6vDS03vPLBlT3NkUHpROBU0VkfZwH6PMFS9SqP_FIT4Mh24Aow5cXIAJb8U2Zar0_V23E9Z4mXqJ.Ja76rg6yuE2lmwYc3noxazUZ5Lw3BUfX1zAxNONV1T1rQrpzpz.WP6i1AB8PqdY1BTibW1t.Rl_zRXsg5cnMkKAXkuknjCdEAgRmOrCu2Nc6q13BDhP2.0nDymuUmO6_9kuJDN2gRGWYk9vPqYfiudrGmKa9fmJTw01xj.vogBEG4vIDXEe50pURvGMUk5qeMgPrEGnGs6P_w4ppD45euDhM5u9EcIjgk9zEwV_v3fUQBS9.u4PsUBpSylp5WNRjaiQsX4.77tIILPQMpp05cjwLDEy9ptfjhZn4GRVgg; usercitycode=moskva; usercityname=%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0; usercitynamegenitive=%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D1%8B; usercitynameprepositional=%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B5; userregionname=%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0; userregionnamegenitive=%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D1%8B; userregionnameprepositional=%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B5; userregioncode=77; userregionurl=moskva; _ym_isad=1; cf_clearance=_uKdig3zXlAJdf0MlmZVf9a8pTbtP8jXWA5SAQcIqSI-1732914447-1.2.1.1-d0kPA0ber42F30k8GmaFM2RYcCWuw5a9lktfTySdYEGw.TOve.uKrW0tmk96sGM_ycxj6UM9ln6vDS03vPLBlT3NkUHpROBU0VkfZwH6PMFS9SqP_FIT4Mh24Aow5cXIAJb8U2Zar0_V23E9Z4mXqJ.Ja76rg6yuE2lmwYc3noxazUZ5Lw3BUfX1zAxNONV1T1rQrpzpz.WP6i1AB8PqdY1BTibW1t.Rl_zRXsg5cnMkKAXkuknjCdEAgRmOrCu2Nc6q13BDhP2.0nDymuUmO6_9kuJDN2gRGWYk9vPqYfiudrGmKa9fmJTw01xj.vogBEG4vIDXEe50pURvGMUk5qeMgPrEGnGs6P_w4ppD45euDhM5u9EcIjgk9zEwV_v3fUQBS9.u4PsUBpSylp5WNRjaiQsX4.77tIILPQMpp05cjwLDEy9ptfjhZn4GRVgg; usercitycode=moskva; usercityname=%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0; usercitynamegenitive=%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D1%8B; usercitynameprepositional=%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B5; userregioncode=77; userregionname=%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0; userregionnamegenitive=%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D1%8B; userregionnameprepositional=%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B5; userregionurl=moskva")
+	req.Header.Add("origin", "https://mingkh.ru")
+	req.Header.Add("priority", "u=0, i")
+	req.Header.Add("referer", "https://mingkh.ru/?__cf_chl_tk=CAGJxtpoZarfJXj1o1dst38SUOWThmZ80QBYeeGtDmE-1732914447-1.0.1.1-BOKDP4eMTQ2mly.GZcYU4Ta8VnSwSi9dgiX_5I4qGRU")
+	req.Header.Add("sec-ch-ua", "\"Chromium\";v=\"128\", \"Not;A=Brand\";v=\"24\", \"YaBrowser\";v=\"24.10\", \"Yowser\";v=\"2.5\"")
+	req.Header.Add("sec-ch-ua-arch", "\"x86\"")
+	req.Header.Add("sec-ch-ua-bitness", "\"64\"")
+	req.Header.Add("sec-ch-ua-full-version", "\"24.10.2.723\"")
+	req.Header.Add("sec-ch-ua-full-version-list", "\"Chromium\";v=\"128.0.6613.186\", \"Not;A=Brand\";v=\"24.0.0.0\", \"YaBrowser\";v=\"24.10.2.723\", \"Yowser\";v=\"2.5\"")
+	req.Header.Add("sec-ch-ua-mobile", "?0")
+	req.Header.Add("sec-ch-ua-model", "\"\"")
+	req.Header.Add("sec-ch-ua-platform", "\"Linux\"")
+	req.Header.Add("sec-ch-ua-platform-version", "\"6.8.0\"")
+	req.Header.Add("sec-fetch-dest", "document")
+	req.Header.Add("sec-fetch-mode", "navigate")
+	req.Header.Add("sec-fetch-site", "same-origin")
+	req.Header.Add("sec-fetch-user", "?1")
+	req.Header.Add("upgrade-insecure-requests", "1")
+	req.Header.Add("user-agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 YaBrowser/24.10.0.0 Safari/537.36")
+
+	res, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+	defer res.Body.Close()
+
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+	//fmt.Println(string(body))
+
+	return body
+}

@@ -3,11 +3,11 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"github.com/PuerkitoBio/goquery"
 	"os"
 	"strconv"
 	"strings"
 
-	"github.com/gocolly/colly/v2"
 	"github.com/gosuri/uilive"
 	"github.com/xuri/excelize/v2"
 )
@@ -70,8 +70,9 @@ func main() {
 	myscanner.Scan()
 	line := myscanner.Text()
 	strs := strings.Split(line, " ")
+	//strs := []string{"1"}
 	var regionslinksNEW []region
-	if len(strs) == 0 || strs[0] == "0" {
+	if len(strs) == 0 || strs[0] == "1" {
 		fmt.Println("Начинаю парсить все регионы(это будет долго).")
 		citylinks := cityMakingLinks(regionslinks)
 		zhekLinks := zhekLinkMake(citylinks)
@@ -107,7 +108,7 @@ func main() {
 		myscanner.Scan()
 		line := myscanner.Text()
 		strs := strings.Split(line, " ")
-		//fmt.Println(strs)
+		//strs := []string{"0"}
 		var citylinksNEW []CityLink
 		for i := 0; i < len(strs); i++ {
 			var strINT int
@@ -142,76 +143,143 @@ func main() {
 
 func zhekMakinkList(f *excelize.File, zhekLinks []zhekLink) {
 	var tecZhek, cleartecZhek zhek
-	c := colly.NewCollector()
-	c.OnHTML("div[class=breads] ul", func(e *colly.HTMLElement) {
-		//fmt.Println(1)
-		tecZhek.region = e.DOM.Find("li:nth-child(2)").Text()
-		tecZhek.city = e.DOM.Find("li:nth-child(3)").Text()
-		tecZhek.name = e.DOM.Find("li:nth-child(4)").Text()
-		tecZhek.link, _ = e.DOM.Find("li:nth-child(4) a").Attr("href")
-		tecZhek.link = site + tecZhek.link
-	})
-	c.OnHTML("div[id=registracionnye-dannye] div[class^=table-responsive] table[class^=table] tbody tr td", func(e *colly.HTMLElement) {
-		//fmt.Println(4)
-		if strings.Contains(e.DOM.Text(), "Полное наименование") {
-			tecZhek.nameAll = e.DOM.Next().Text()
-		}
-		if strings.Contains(e.DOM.Text(), "ИНН") {
-			tecZhek.inn = e.DOM.Next().Text()
-		}
-		if strings.Contains(e.DOM.Text(), "ОГРН") {
-			tecZhek.ogrn = e.DOM.Next().Text()
-		}
-		if strings.Contains(e.DOM.Text(), "Адрес регистрации ЮЛ") {
-			tecZhek.adresUR = e.DOM.Next().Text()
-		}
-		//***
-		if strings.Contains(e.DOM.Text(), "Фактическое местонахождение органов управления") {
-			tecZhek.adresF = e.DOM.Next().Text()
-		}
-		if strings.Contains(e.DOM.Text(), "Контактные телефоны") {
-			tecZhek.tel1 = e.DOM.Next().Text()
-		}
-		if strings.Contains(e.DOM.Text(), "Телефон диспетчерской службы") {
-			tecZhek.tel2 = e.DOM.Next().Text()
-		}
-		if strings.Contains(e.DOM.Text(), "ФИО руководителя") {
-			tecZhek.people = e.DOM.Next().Text()
-		}
-		if strings.Contains(e.DOM.Text(), "Официальный сайт") {
-			tecZhek.site = e.DOM.Next().Text()
-		}
-	})
-
-	c.OnHTML("div[class=col-md-7]", func(e *colly.HTMLElement) {
-		tecZhek.dom = e.DOM.Find("span:nth-child(1)").Text()
-		tecZhek.dom = strings.Replace(tecZhek.dom, "&nbsp;", "", -1)
-		tecZhek.dom = strings.Replace(tecZhek.dom, " ", "", -1)
-		tecZhek.dom = strings.Replace(tecZhek.dom, "дома", "", -1)
-		tecZhek.dom = strings.Replace(tecZhek.dom, "домов", "", -1)
-		tecZhek.dom = strings.Replace(tecZhek.dom, "дом", "", -1)
-
-		tecZhek.metr = e.DOM.Find("span:nth-child(2)").Text()
-		tecZhek.metr = strings.Replace(tecZhek.metr, "&nbsp;", "", -1)
-		tecZhek.metr = strings.Replace(tecZhek.metr, " ", "", -1)
-		tecZhek.metr = strings.Replace(tecZhek.metr, "м2", "", -1)
-	})
-
-	c.OnHTML("dl[class^=dl-horizontal] dt", func(e *colly.HTMLElement) {
-		if e.DOM.Text() == "E-mail" {
-			tecZhek.email = e.DOM.Next().Text()
-		}
-		if e.DOM.Text() == "Веб-сайт" {
-			tecZhek.site = e.DOM.Next().Text()
-		}
-	})
+	//c := colly.NewCollector()
+	//c.OnHTML("div[class=breads] ul", func(e *colly.HTMLElement) {
+	//	//fmt.Println(1)
+	//	tecZhek.region = e.DOM.Find("li:nth-child(2)").Text()
+	//	tecZhek.city = e.DOM.Find("li:nth-child(3)").Text()
+	//	tecZhek.name = e.DOM.Find("li:nth-child(4)").Text()
+	//	tecZhek.link, _ = e.DOM.Find("li:nth-child(4) a").Attr("href")
+	//	tecZhek.link = site + tecZhek.link
+	//})
+	//c.OnHTML("div[id=registracionnye-dannye] div[class^=table-responsive] table[class^=table] tbody tr td", func(e *colly.HTMLElement) {
+	//	//fmt.Println(4)
+	//	if strings.Contains(e.DOM.Text(), "Полное наименование") {
+	//		tecZhek.nameAll = e.DOM.Next().Text()
+	//	}
+	//	if strings.Contains(e.DOM.Text(), "ИНН") {
+	//		tecZhek.inn = e.DOM.Next().Text()
+	//	}
+	//	if strings.Contains(e.DOM.Text(), "ОГРН") {
+	//		tecZhek.ogrn = e.DOM.Next().Text()
+	//	}
+	//	if strings.Contains(e.DOM.Text(), "Адрес регистрации ЮЛ") {
+	//		tecZhek.adresUR = e.DOM.Next().Text()
+	//	}
+	//	//***
+	//	if strings.Contains(e.DOM.Text(), "Фактическое местонахождение органов управления") {
+	//		tecZhek.adresF = e.DOM.Next().Text()
+	//	}
+	//	if strings.Contains(e.DOM.Text(), "Контактные телефоны") {
+	//		tecZhek.tel1 = e.DOM.Next().Text()
+	//	}
+	//	if strings.Contains(e.DOM.Text(), "Телефон диспетчерской службы") {
+	//		tecZhek.tel2 = e.DOM.Next().Text()
+	//	}
+	//	if strings.Contains(e.DOM.Text(), "ФИО руководителя") {
+	//		tecZhek.people = e.DOM.Next().Text()
+	//	}
+	//	if strings.Contains(e.DOM.Text(), "Официальный сайт") {
+	//		tecZhek.site = e.DOM.Next().Text()
+	//	}
+	//})
+	//
+	//c.OnHTML("div[class=col-md-7]", func(e *colly.HTMLElement) {
+	//	tecZhek.dom = e.DOM.Find("span:nth-child(1)").Text()
+	//	tecZhek.dom = strings.Replace(tecZhek.dom, "&nbsp;", "", -1)
+	//	tecZhek.dom = strings.Replace(tecZhek.dom, " ", "", -1)
+	//	tecZhek.dom = strings.Replace(tecZhek.dom, "дома", "", -1)
+	//	tecZhek.dom = strings.Replace(tecZhek.dom, "домов", "", -1)
+	//	tecZhek.dom = strings.Replace(tecZhek.dom, "дом", "", -1)
+	//
+	//	tecZhek.metr = e.DOM.Find("span:nth-child(2)").Text()
+	//	tecZhek.metr = strings.Replace(tecZhek.metr, "&nbsp;", "", -1)
+	//	tecZhek.metr = strings.Replace(tecZhek.metr, " ", "", -1)
+	//	tecZhek.metr = strings.Replace(tecZhek.metr, "м2", "", -1)
+	//})
+	//
+	//c.OnHTML("dl[class^=dl-horizontal] dt", func(e *colly.HTMLElement) {
+	//	if e.DOM.Text() == "E-mail" {
+	//		tecZhek.email = e.DOM.Next().Text()
+	//	}
+	//	if e.DOM.Text() == "Веб-сайт" {
+	//		tecZhek.site = e.DOM.Next().Text()
+	//	}
+	//})
 
 	fmt.Println()
 	writer := uilive.New()
 	// start listening for updates and render
 	writer.Start()
 	for ind, tea := range zhekLinks {
-		c.Visit(site + tea.link)
+		body := get(site + tea.link)
+		//fmt.Println("$+$+$\n", string(body))
+		var doc, _ = goquery.NewDocumentFromReader(strings.NewReader(string(body)))
+		doc.Find("div[class=breads] ul").Each(func(i int, s *goquery.Selection) {
+			tecZhek.region = s.Find("li:nth-child(2)").Text()
+			tecZhek.city = s.Find("li:nth-child(3)").Text()
+			tecZhek.name = s.Find("li:nth-child(4)").Text()
+			tecZhek.link, _ = s.Find("li:nth-child(4) a").Attr("href")
+			tecZhek.link = site + tecZhek.link
+		})
+		doc.Find("div[id=registracionnye-dannye] div[class^=table-responsive] table[class^=table] tbody tr td").Each(func(i int, s *goquery.Selection) {
+			if strings.Contains(s.Text(), "Полное наименование") {
+				tecZhek.nameAll = s.Next().Text()
+			}
+			if strings.Contains(s.Text(), "ИНН") {
+				tecZhek.inn = s.Next().Text()
+			}
+			if strings.Contains(s.Text(), "ОГРН") {
+				tecZhek.ogrn = s.Next().Text()
+			}
+			if strings.Contains(s.Text(), "Адрес регистрации ЮЛ") {
+				tecZhek.adresUR = s.Next().Text()
+			}
+			//***
+			if strings.Contains(s.Text(), "Фактическое местонахождение органов управления") {
+				tecZhek.adresF = s.Next().Text()
+			}
+			if strings.Contains(s.Text(), "Контактные телефоны") {
+				tecZhek.tel1 = s.Next().Text()
+			}
+			if strings.Contains(s.Text(), "Телефон диспетчерской службы") {
+				tecZhek.tel2 = s.Next().Text()
+			}
+			if strings.Contains(s.Text(), "ФИО руководителя") {
+				tecZhek.people = s.Next().Text()
+			}
+			if strings.Contains(s.Text(), "Официальный сайт") {
+				tecZhek.site = s.Next().Text()
+			}
+		})
+		doc.Find("div[class=col-md-7]").Each(func(i int, s *goquery.Selection) {
+			tecZhek.dom = s.Find("span:nth-child(1)").Text()
+			tecZhek.dom = strings.Replace(tecZhek.dom, "&nbsp;", "", -1)
+			tecZhek.dom = strings.Replace(tecZhek.dom, " ", "", -1)
+			tecZhek.dom = strings.Replace(tecZhek.dom, "дома", "", -1)
+			tecZhek.dom = strings.Replace(tecZhek.dom, "домов", "", -1)
+			tecZhek.dom = strings.Replace(tecZhek.dom, "дом", "", -1)
+
+			tecZhek.metr = s.Find("span:nth-child(2)").Text()
+			tecZhek.metr = strings.Replace(tecZhek.metr, "&nbsp;", "", -1)
+			tecZhek.metr = strings.Replace(tecZhek.metr, " ", "", -1)
+			tecZhek.metr = strings.Replace(tecZhek.metr, "м2", "", -1)
+		})
+		doc.Find("dl[class^=dl-horizontal] dt").Each(func(i int, s *goquery.Selection) {
+
+			ss := s.Text()
+			_ = ss
+
+			if s.Text() == "E-mail" {
+				sNext := s.Next().Find("a")
+				dataCfemail, _ := sNext.Attr("data-cfemail")
+				tecZhek.email = decryptEmail(dataCfemail)
+			}
+			if s.Text() == "Веб-сайт" {
+				tecZhek.site = s.Next().Text()
+			}
+		})
+
 		writeInXlsx(f, tecZhek)
 		tecZhek = cleartecZhek
 		fmt.Fprintf(writer, "   Загрузка (%d/%d)\n", ind+1, len(zhekLinks))
@@ -222,15 +290,25 @@ func zhekMakinkList(f *excelize.File, zhekLinks []zhekLink) {
 func zhekLinkMake(citylinks []CityLink) []zhekLink {
 	var zhekLinks []zhekLink
 	var zheksLinks zhekLink
-	c := colly.NewCollector()
-	c.OnHTML("tbody a", func(e *colly.HTMLElement) {
-		zheksLinks.link, _ = e.DOM.Attr("href")
-		//zheksLinks.region = e.DOM.Text()
-		zhekLinks = append(zhekLinks, zheksLinks)
-		//writeInXlsx(f_excel, tecZhek)
-	})
+	//c := colly.NewCollector()
+	//c.OnHTML("tbody a", func(e *colly.HTMLElement) {
+	//	zheksLinks.link, _ = e.DOM.Attr("href")
+	//	//zheksLinks.region = e.DOM.Text()
+	//	zhekLinks = append(zhekLinks, zheksLinks)
+	//	//writeInXlsx(f_excel, tecZhek)
+	//})
+
 	for _, val := range citylinks {
-		c.Visit(site + "/rating" + val.link)
+		//c.Visit(site + "/rating" + val.link)
+
+		body := get(site + "/rating" + val.link)
+		var doc, _ = goquery.NewDocumentFromReader(strings.NewReader(string(body)))
+		doc.Find("tbody a").Each(func(i int, s *goquery.Selection) {
+			zheksLinks.link, _ = s.Attr("href")
+			//zheksLinks.region = e.DOM.Text()
+			zhekLinks = append(zhekLinks, zheksLinks)
+			//writeInXlsx(f_excel, tecZhek)
+		})
 	}
 	//fmt.Println(site + "/rating" + citylinks[0].link)
 	//c.Visit(site + "/rating" + citylinks[0].link)
@@ -238,35 +316,37 @@ func zhekLinkMake(citylinks []CityLink) []zhekLink {
 }
 
 func regionMakingLinks() []region {
-	var regions []region
+	regions := make([]region, 0, 88)
 	var reg region
-	c := colly.NewCollector()
-	c.OnHTML("ul[class^=col-md-3] li", func(e *colly.HTMLElement) {
 
-		reg.link, _ = e.DOM.Find("a").Attr("href")
-		reg.region = e.DOM.Find("a").Text()
+	body := get(site)
+
+	var doc, _ = goquery.NewDocumentFromReader(strings.NewReader(string(body)))
+	doc.Find("ul[class^=col-md-3] li").Each(func(i int, s *goquery.Selection) {
+		reg.link, _ = s.Find("a").Attr("href")
+		reg.region = s.Find("a").Text()
 		regions = append(regions, reg)
 	})
-	c.Visit(site)
+
 	return regions
 }
 
 func cityMakingLinks(regions []region) []CityLink {
 
-	var citylinks []CityLink
+	cityLinks := make([]CityLink, 0, 3000)
 	var city CityLink
 
-	b := colly.NewCollector()
-	b.OnHTML("ul[class^=col-md-3] li", func(e *colly.HTMLElement) {
-		city.link, _ = e.DOM.Find("a").Attr("href")
-		city.city = e.DOM.Find("a").Text()
-		citylinks = append(citylinks, city)
-	})
 	for _, val := range regions {
-		b.Visit(site + val.link)
+		body := get(site + val.link)
+		var doc, _ = goquery.NewDocumentFromReader(strings.NewReader(string(body)))
+		doc.Find("ul[class^=col-md-3] li").Each(func(i int, s *goquery.Selection) {
+			city.link, _ = s.Find("a").Attr("href")
+			city.city = s.Find("a").Text()
+			cityLinks = append(cityLinks, city)
+		})
 	}
 	//b.Visit(site + regions[0].link)
-	return citylinks
+	return cityLinks
 }
 func writeInXlsxArr(f *excelize.File, vals []zhek) {
 	for _, val := range vals {
